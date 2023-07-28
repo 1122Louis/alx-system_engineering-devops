@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
-# This script is displaying I am invincible!!! when receiving a SIGTERM signal
-while true
+# Prints "To infinity and beyond" indefinitely, intercepts SIGTERM
+
+trap 'echo "I am invincible!!!"' SIGTERM
+
+while (true)
 do
-    echo "To infinity and beyond"
-    sleep 2
-    trap 'echo "I am invincible!!!"' SIGTERM 
+	echo "To infinity and beyond"
+	sleep 2
 done
