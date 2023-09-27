@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Install nginx, redirect /redirect_me location to a youtube video
+
+REDIRECT='rewrite ^/redirect_me http://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;'
+FILE="/etc/nginx/sites-available/default"
+
+sudo apt-get update
+sudo apt-get -y install nginx
+
+echo 'Hello World!' | sudo tee /var/www/html/index.html
+
+sudo sed -i "/^server {.*/a $REDIRECT" "$FILE"
+
+sudo service nginx start
