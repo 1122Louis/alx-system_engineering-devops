@@ -1,5 +1,3 @@
 #!/usr/bin/env bash
-# Connect to a SSH server using the user ubuntu
-# with the PK ~/.ssh/school
-
-ssh ubuntu@100.26.165.122 -i ~/.ssh/school
+# This script connects to the server 266025-web-01 using SSH with a private key
+ssh -i ~/.ssh/school ubuntu@266025-web-01
