@@ -1,14 +1,16 @@
 #!/usr/bin/env bash
-# Install nginx, redirect /redirect_me location to a youtube video
+#  A Script that configures a new Ubuntu machine to Perform a 301-redirection
 
-REDIRECT='rewrite ^/redirect_me http://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;'
-FILE="/etc/nginx/sites-available/default"
-
+# Upadating Packages before Installations
 sudo apt-get update
-sudo apt-get -y install nginx
+sudo apt-get install -y nginx
 
-echo 'Hello World!' | sudo tee /var/www/html/index.html
+# Creating an index.html page
+echo "Hello World!" | sudo tee /var/www/html/index.html
 
-sudo sed -i "/^server {.*/a $REDIRECT" "$FILE"
+# Performing a 301 Redirection
+string_for_replacement="server_name _;\n\trewrite ^\/redirect_me https:\/\/github.com\/1122Louis permanent;"
+sudo sed -i "s/server_name _;/$string_for_replacement/" /etc/nginx/sites-enabled/default
 
-sudo service nginx start
+# Restarting Nginx service
+sudo service nginx restart
