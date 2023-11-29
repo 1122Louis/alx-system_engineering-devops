@@ -1,22 +1,21 @@
-# Install nginx, redirect /redirect_me location to a youtube video
+# Automating project requirements using Puppet
 
-package {'nginx':
-  ensure => present
+package { 'nginx':
+  ensure => installed,
 }
 
-file {'/var/www/html/index.html':
-  ensure  => file,
-  content => 'Hello World!
-'
+file_line { 'install':
+  ensure => 'present',
+  path   => '/etc/nginx/sites-enabled/default',
+  after  => 'listen 80 default_server;',
+  line   => 'rewrite ^/redirect_me https://www.github.com/1122Louis permanent;',
 }
 
-file_line {'Redirect Me':
-  path  => '/etc/nginx/sites-available/default',
-  after => '^server',
-  line  => 'rewrite ^/redirect_me http://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;'
+file { '/var/www/html/index.html':
+  content => 'Hello World!',
 }
 
-service {'nginx':
-  ensure => running,
-  enable => true
+service { 'nginx':
+  ensure  => running,
+  require => Package['nginx'],
 }
