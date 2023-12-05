@@ -1,32 +1,28 @@
 #!/usr/bin/env bash
-# This script configures Nginx to include a custom HTTP response header
-# named X-Served-By with the value being the hostname of the server.
+# Install nginx and do some setup
 
-apt-get update
-apt-get install -y nginx
+# redirect /redirect_me location to a youtube video
+REDIRECT=' \
+\trewrite ^/redirect_me http://www.github.com/1122Louis permanent;'
 
-mkdir -p /var/www/html
-touch /var/www/html/index.html
-echo "Holberton School" > /var/www/html/index.html
-touch /var/www/html/404.html
-echo "Ceci n'est pas une page" > /var/www/html/404.html
+# Add 404 error page
+NOT_FOUND=' \
+\terror_page 404 /custom_404.html;'
 
-printf %s "server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
-    add_header X-Served-By $HOSTNAME;
-    root   /var/www/html;
-    index  index.html index.htm;
+# Add a custom header
+SERVED_BY=" \
+\tadd_header X-Served-By \$hostname;"
 
-    location /redirect_me {
-        return 301 http://cuberule.com/;
-    }
+ALL="$REDIRECT\n$NOT_FOUND\n$SERVED_BY"
 
-    error_page 404 /404.html;
-    location /404 {
-      root /var/www/html;
-      internal;
-    }
-}" > /etc/nginx/sites-available/default
+FILE="/etc/nginx/sites-available/default"
 
-service nginx restart
+sudo apt-get update
+sudo apt-get -y install nginx
+
+echo 'Hello World!' | sudo tee /var/www/html/index.html
+echo "Ceci n'est pas une page" | sudo tee /var/www/html/custom_404.html
+
+sudo sed -i "/^server {.*/a $ALL" "$FILE"
+
+sudo service nginx start
