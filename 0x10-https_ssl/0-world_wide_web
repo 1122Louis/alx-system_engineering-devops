@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+<<<<<<< HEAD
 # This script displays information about subdomains of a given domain.
 
 # Function to retrieve the IP address of a subdomain
@@ -17,6 +18,16 @@ domain_information() {
     else
         echo "The subdomain $subdomain is a A record and points to $ip_address"
     fi
+=======
+# Shows information about subdomains.
+
+domain_information() {
+    local domain="$1"
+    local subdomain="$2"
+    local line
+    line=$(dig "$subdomain"."$domain" | awk '/ANSWER SECTION:/ {getline; print; getline; print}')
+    echo "$subdomain $line" | awk '{printf "The subdomain %s is a %s record and points to %s\n", $1, $2, $3}'
+>>>>>>> 8ee4c5d2281ed2d4404b3242dd8b8cd60478b13e
 }
 
 if [ "$#" -eq 1 ]; then
@@ -26,6 +37,9 @@ if [ "$#" -eq 1 ]; then
     domain_information "$1" "web-02"
 elif [ "$#" -eq 2 ]; then
     domain_information "$1" "$2"
+<<<<<<< HEAD
 else
     echo "Usage: $0 <domain> [subdomain]"
+=======
+>>>>>>> 8ee4c5d2281ed2d4404b3242dd8b8cd60478b13e
 fi
